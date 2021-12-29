@@ -14,7 +14,7 @@ void* subscriber_thread(void* server){
 		pid_t child_pid = fork();
 		if(child_pid == -1) throw runtime_error("Can not fork.");
 		if(child_pid == 0){
-			execl("client", "client", "0", server_ptr->get_publisher()->get_endpoint().data(), "-1", nullptr);
+			execl("client", "client", "0", server_ptr->get_publisher()->get_endpoint().data(), "-2", nullptr);
 			throw runtime_error("Can not execl");
 			server_ptr->~Server();
 			return (void*)-1;
@@ -24,10 +24,10 @@ void* subscriber_thread(void* server){
 		server_ptr->get_tree().insert(0);
 		for(;;){
 			Message msg = server_ptr->get_subscriber()->receive();
-			if(msg.command == CommandType::ERROR){
-				//todo
-			}
 			server_ptr->last_msg = msg;
+			if(msg.command == CommandType::ERROR){
+				continue;
+			}
 			//cout << "Message on server: " << int
 			switch(msg.command){
 				case CommandType::CREATE_CHILD:
