@@ -79,7 +79,7 @@ int Client::add_child(int new_id){
 		throw runtime_error("Can not execl.");
 	}
 	string endpoint = create_endpoint(EndpointType::PARENT_PUB, pid);
-	size_t timeout = 10000;
+	int timeout = 1000;
 	if(id > new_id){
 		left_subscriber = new Socket(context, SocketType::SUBSCRIBER, endpoint);
 		zmq_setsockopt(left_subscriber->get_socket(), ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
@@ -168,7 +168,7 @@ int main (int argc, char const *argv[])
 		client_ptr = &client;
 		cout << getpid() << ": " "Client started. "  << "Id:" << client.get_id() << endl;
 		for(;;){
-			//cout << client.get_id() << ": " "Client ready. " << client.parent_subscriber->get_endpoint() << endl;
+			cout << client.get_id() << ": " "Client ready. " << endl;
 			Message msg = client.parent_subscriber->receive();
 			if(msg.to_id != client.get_id() && msg.to_id != UNIVERSAL_MSG){
 				if(msg.to_up){
@@ -196,7 +196,8 @@ int main (int argc, char const *argv[])
 						}
 						client.send_up(msg);
 					}catch(...){
-						client.send_up(Message());
+						if(client.parent_id == -2)
+							client.send_up(Message());
 					}
 				}
 			} else{
