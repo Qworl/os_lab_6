@@ -28,7 +28,6 @@ void* subscriber_thread(void* server){
 			if(msg.command == CommandType::ERROR){
 				continue;
 			}
-			//cout << "Message on server: " << int
 			switch(msg.command){
 				case CommandType::CREATE_CHILD:
 					cout << "OK:" << msg.get_create_id() << endl;
@@ -47,7 +46,7 @@ void* subscriber_thread(void* server){
 			}
 		}
 	} catch(runtime_error& err){
-		cout << "Server wasn't started " << err.what() << endl;
+		cout << "Server wasn't started " << err.what() << '\n';
 	}
 	return nullptr;
 }
@@ -90,7 +89,7 @@ void Server::print_tree(){
 bool Server::check(int id){
 	Message msg(CommandType::RETURN, id, 0);
 	send(msg);
-	sleep(msg_wait_time);
+	sleep(2);
 	msg.get_to_id() = SERVER_ID;
 	//cout << msg.to_id << " " << msg.create_id << " " << msg.uniq_num << " " << endl;
 	//cout << last_msg.to_id << " " << last_msg.create_id << " " << last_msg.uniq_num << " " << endl;

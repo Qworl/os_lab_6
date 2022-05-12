@@ -137,7 +137,7 @@ Message get_zmq_msg(void* socket){
 	zmq_msg_t zmq_msg;
 	zmq_msg_init(&zmq_msg);
 	if(zmq_msg_recv(&zmq_msg, socket, 0) == -1){
-		return Message(); //ERROR message
+		throw runtime_error("ERROR message");
 	}
 	Message msg;
 	memcpy(&msg, zmq_msg_data(&zmq_msg),  sizeof(msg));
